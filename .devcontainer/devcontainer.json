@@ -1,0 +1,60 @@
+// .devcontainer/devcontainer.json
+// VSCode Dev Containerの設定を行います。
+{
+  "name": "React FastAPI Dev Env",
+  // docker-compose.ymlをベースに環境を構築
+  "dockerComposeFile": "../docker-compose.yml",
+  // 接続するメインのサービスを指定 (このコンテナ内で作業する)
+  "service": "backend",
+  // コンテナ内のワークスペースのパス
+  "workspaceFolder": "/app",
+
+  // ===== ここから追加 =====
+  "features": {
+    "ghcr.io/devcontainers/features/docker-from-docker:1": {
+        "version": "latest"
+    }
+  },
+  // ===== ここまで追加 =====
+
+  // VSCode UIのカスタマイズ
+  "customizations": {
+    "vscode": {
+      // コンテナ内で自動的にインストールする拡張機能
+      "extensions": [
+        "ms-python.python", // Python拡張機能
+        "ms-python.vscode-pylance", // 高機能な言語サーバー
+        "charliermarsh.ruff", // 高速なリンター＆フォーマッター
+        "esbenp.prettier-vscode", // コードフォーマッター
+        "ms-azuretools.vscode-docker" // Docker拡張機能
+      ],
+      // VSCodeの設定
+      "settings": {
+        // Python関連の設定
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": false,
+        "python.formatting.provider": "none", // ruffに任せる
+        // ruffをデフォルトフォーマッターに設定
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff",
+          "editor.formatOnSave": true,
+          "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit",
+            "source.organizeImports": "explicit"
+          }
+        },
+        // Prettierをデフォルトフォーマッターに設定
+        "[javascript][javascriptreact][typescript][typescriptreact]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode",
+          "editor.formatOnSave": true
+        }
+      }
+    }
+  },
+  // コンテナ作成後に実行するコマンド
+  // フロントエンドの依存関係をインストールしておく
+  "postCreateCommand": "docker-compose -f ../docker-compose.yml exec -T frontend npm install",
+  // コンテナ終了時にサービスをシャットダウンする
+  "shutdownAction": "stopCompose"
+}

@@ -1,0 +1,47 @@
+# docker-compose.yml
+# Dockerサービス全体（バックエンド、フロントエンド）を定義します。
+
+version: '3.8'
+
+services:
+  # バックエンド (FastAPI) サービス
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    # コンテナ名を指定
+    container_name: myapp_backend
+    # ローカルの./backendをコンテナの/appにマウントし、ホットリロードを有効化
+    volumes:
+      - ./backend:/app
+    # ポートマッピング: ホストの8000番をコンテナの8000番に接続
+    ports:
+      - "8000:8000"
+    # 起動コマンド: uvicornサーバーをリロードモードで起動
+    # Dev Container内で手動で起動するため、ここではコメントアウトしています。
+    # command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    # 環境変数を設定
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  # フロントエンド (React) サービス
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    # コンテナ名を指定
+    container_name: myapp_frontend
+    # ローカルの./frontendをコンテナの/appにマウント
+    volumes:
+      - ./frontend:/app
+      # node_modulesはマウント対象外とし、コンテナ内のものを利用
+      - /app/node_modules
+    # ポートマッピング: ホストの5173番をコンテナの5173番に接続
+    ports:
+      - "5173:5173"
+    # Reactのホットリロードに必要な設定
+    stdin_open: true
+    tty: true
+    # backendサービスが起動してからfrontendを起動
+    depends_on:
+      - backend

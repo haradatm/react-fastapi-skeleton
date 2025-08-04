@@ -1,0 +1,17 @@
+# backend/pyproject.toml
+# PEP 621に準拠したPythonプロジェクトのメタデータと依存関係を定義します。
+
+[project]
+name = "backend"
+version = "0.1.0"
+description = "FastAPI backend for the application."
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.111.0",
+    # uvicornの標準機能（websockets, http-tools）を含む
+    "uvicorn[standard]>=0.29.0", 
+]
+
+[tool.uv]
+# uv用の設定（もしあれば）
