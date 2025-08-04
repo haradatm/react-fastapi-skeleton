@@ -36,7 +36,7 @@
 
 ### 前提条件
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [Docker](https://www.docker.com/products/trusted-content/open-source/)
 - [Visual Studio Code](https://code.visualstudio.com/)
 - VSCode拡張機能: [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
