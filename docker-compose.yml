@@ -1,0 +1,17 @@
+services:
+  # バックエンドサービス (FastAPI)
+  backend:
+    build: ./backend
+    # 開発時にホットリロードを有効にする
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ./backend/app:/app/app
+
+  # フロントエンドサービス (React + Nginx)
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80" # ホストの3000番ポートをコンテナの80番ポートにマッピング
+    depends_on:
+      - backend # backendサービスが起動してからfrontendを起動
+
