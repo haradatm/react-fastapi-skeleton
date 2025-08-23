@@ -2,14 +2,15 @@ services:
   # バックエンドサービス (FastAPI)
   backend:
     build: ./backend
-    # 開発時にホットリロードを有効にする
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
       - ./backend/app:/app/app
 
-  # フロントエンドサービス (React + Nginx)
+  # フロントエンドサービス (React Development Server)
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev # 開発用のDockerfileを指定
     ports:
       - "3000:5173" # ホストの3000番をViteのデフォルトポート5173にマッピング
     volumes:
@@ -17,6 +18,5 @@ services:
       - ./frontend:/app
       # ローカルのnode_modulesがコンテナ内を上書きしないようにする
       - /app/node_modules
-    command: npm run dev # 開発サーバーを起動
     depends_on:
       - backend # backendサービスが起動してからfrontendを起動
