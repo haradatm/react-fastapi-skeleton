@@ -1,4 +1,4 @@
-# React + FastAPI + Docker 雛形プロジェクト
+# React + FastAPI + Docker 雛形
 
 React (Vite), FastAPI, uv, Docker を使用したモダンなWebアプリケーション開発のためのシンプルな雛形です。
 
