@@ -1,0 +1,12 @@
+services:
+  backend:
+    build: ./backend
+    # --reload と volumes を削除し、本番用の起動コマンドにする
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+  frontend:
+    build: ./frontend
+    ports:
+      # ホストの80番ポートをコンテナの80番ポートにマッピング
+      - "80:80"
+    # 開発用の command と volumes は不要。DockerfileのCMDが実行される

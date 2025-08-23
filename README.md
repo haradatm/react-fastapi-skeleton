@@ -8,14 +8,14 @@ React (Vite), FastAPI, uv, Docker を使用したモダンなWebアプリケー�
 - **高速なパッケージ管理**: Pythonのパッケージ管理に高速な **uv** を使用。
 - **コンテナ化**: **Docker** と **Docker Compose** により、環境構築が容易で再現性が高い。
 - **本番に近い構成**: 本番環境を想定し、フロントエンドは **Nginx** で静的ファイルを配信し、バックエンドへのリバースプロキシとしても機能。
-- **開発効率**: バックエンドはホットリロードに対応しており、コードの変更が即座に反映されます。
+- **開発効率**: フロントエンド・バックエンド共にホットリロードに対応しており、コードの変更が即座に反映されます。
 
 ## 🚀 使用技術
 
 - **フロントエンド**: React 18, TypeScript, Vite, Axios
 - **バックエンド**: FastAPI, Python 3.12, Uvicorn
 - **パッケージ管理**: npm (Frontend), uv (Backend)
-- **Webサーバー**: Nginx
+- **Webサーバー**: Nginx (本番ビルド時), Vite Dev Server (開発時)
 - **コンテナ**: Docker, Docker Compose
 
 ## 📂 ディレクトリ構造
@@ -34,9 +34,11 @@ React (Vite), FastAPI, uv, Docker を使用したモダンなWebアプリケー�
 │   │   └── App.tsx      # Reactコンポーネント
 │   ├── nginx.conf       # Nginxリバースプロキシ設定
 │   ├── package.json     # Node.js依存関係
+│   ├── vite.config.ts   # Vite設定 (APIプロキシ含む)
 │   └── Dockerfile       # フロントエンド用Dockerfile
 │
-└── docker-compose.yml     # Docker Compose設定
+├── docker-compose.yml      # 開発環境用設定
+└── docker-compose.prod.yml # 本番環境用設定
 ```
 
 ## 🛠️ セットアップと実行方法
@@ -52,8 +54,8 @@ React (Vite), FastAPI, uv, Docker を使用したモダンなWebアプリケー�
 1.  **リポジトリをクローン**:
     まず、このリポジトリをローカルマシンにクローンし、ディレクトリに移動します。
     ```bash
-    git clone https://github.com/haradatm/react-fastapi-skeleton
-    cd react-fastapi-skeleton
+    git clone <リポジトリのURL>
+    cd <リポジトリ名>
     ```
 
 2.  **フロントエンドプロジェクトの初期化**:
@@ -84,29 +86,38 @@ React (Vite), FastAPI, uv, Docker を使用したモダンなWebアプリケー�
     cd ..
     ```
 
-### 3. アプリケーションの起動
+### 3. 開発環境での実行
 
-プロジェクトのルートディレクトリで、以下のコマンドを実行してコンテナをビルドし、起動します。
+ホットリロードが有効な開発環境でアプリケーションを起動します。
 
-```bash
-docker-compose up --build
-```
+1.  **起動コマンド**:
+    ```bash
+    docker-compose up --build
+    ```
 
-### 4. アプリケーションへのアクセス
+2.  **アクセス**:
+    ブラウザで `http://localhost:3000` を開きます。ソースコードを変更すると、自動でブラウザがリロードされます。
 
-ブラウザで以下のURLを開きます。
+### 4. 本番環境での実行
 
-- **`http://localhost:3000`**
+最適化された本番用のコンテナを起動します。
 
-画面にバックエンドで管理されているカウンターが表示されれば成功です。
+1.  **起動コマンド**:
+    `-f` オプションで本番用の設定ファイルを指定します。`-d` はバックグラウンドで起動するオプションです。
+    ```bash
+    docker-compose -f docker-compose.prod.yml up --build -d
+    ```
+
+2.  **アクセス**:
+    ブラウザで `http://localhost` (80番ポート) を開きます。
 
 ### 5. アプリケーションの停止
 
-コンテナを停止するには、ターミナルで `Ctrl + C` を押し、以下のコマンドを実行します。
-
-```bash
-docker-compose down
-```
+- **開発環境の場合**: ターミナルで `Ctrl + C` を押します。
+- **本番環境の場合**: 以下のコマンドを実行します。
+  ```bash
+  docker-compose -f docker-compose.prod.yml down
+  ```
 
 ## 🔌 APIエンドポイント
 

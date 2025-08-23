@@ -11,7 +11,12 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "3000:80" # ホストの3000番ポートをコンテナの80番ポートにマッピング
+      - "3000:5173" # ホストの3000番をViteのデフォルトポート5173にマッピング
+    volumes:
+      # ローカルのソースコードをコンテナにマウントしてホットリロードを有効にする
+      - ./frontend:/app
+      # ローカルのnode_modulesがコンテナ内を上書きしないようにする
+      - /app/node_modules
+    command: npm run dev # 開発サーバーを起動
     depends_on:
       - backend # backendサービスが起動してからfrontendを起動
-
